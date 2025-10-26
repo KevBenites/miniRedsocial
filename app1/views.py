@@ -143,9 +143,18 @@ def devolverPublicacion(request):
             ITERA EN TODAS LAS RESPUESTAS PARA PODER ANEXAR LA INFORMACION EN LA LISTA lista_respuestas
             LOS DATOS A ANEXAR SON EL AUTOR, LA DESCRIPCION O CONTENIDO, EL ID DE LA RESPUESTA Y LA FECHA
             """
+
+            respuestas = comentario.objects.filter(respuesta_a=comentarioInfo).order_by('fecha_creacion')
+            
+            for respuesta in respuestas:
+                lista_respuestas.append({
+                    'autor': f"{respuesta.autoCom.first_name} {respuesta.autoCom.last_name}",
+                    'descripcion': respuesta.descripcion,
+                    'id': respuesta.id,
+                    'fecha': respuesta.fecha_creacion.strftime("%d/%m/%Y %H:%M")
+                })
             
             # FIN SECCION DE AGREGAR LAS RESPUESTAS
-
 
             datosComentario.append({
                 'autor': f"{comentarioInfo.autoCom.first_name} {comentarioInfo.autoCom.last_name}",
@@ -268,6 +277,21 @@ def publicarRespuestaComentario(request):
         OBTENER LOS OBJETOS DE LA BASE DE DATOS
         CREAR EL NUEVO OBJETO COMENTARIO CON EL ATRIBUTO RESPUESTA_A CONFIGURADO ADECUADAMENTE
         """
+
+        datosRespuestaComentario = json.loads(request.body.decode('utf-8'))
+        comentarioTexto = datosRespuestaComentario.get('comentario')
+        idComentario = datosRespuestaComentario.get('idComentario')
+        idPublicacion = datosRespuestaComentario.get('idPublicacion')
+
+        objComentario = comentario.objects.get(id=idComentario)
+        objPublicacion = publicacion.objects.get(id=idPublicacion)
+
+        comentario.objects.create(
+            descripcion=comentarioTexto,
+            pubRel = objPublicacion,
+            autoCom = request.user,
+            respuesta_a = objComentario
+        )
 
         return JsonResponse({'status': 'ok'})
     return JsonResponse({'error': 'Petición inválida'}, status=400)
