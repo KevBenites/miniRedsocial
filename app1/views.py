@@ -279,7 +279,7 @@ def publicarRespuestaComentario(request):
         """
 
         datosRespuestaComentario = json.loads(request.body.decode('utf-8'))
-        comentarioTexto = datosRespuestaComentario.get('comentario')
+        comentarioTexto = datosRespuestaComentario.get('respuesta')
         idComentario = datosRespuestaComentario.get('idComentario')
         idPublicacion = datosRespuestaComentario.get('idPublicacion')
 

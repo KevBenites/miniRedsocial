@@ -36,6 +36,15 @@ function cargarPub(idPub) {
         // CREAR EL BLOQUE HTML CON LA INFORMACION DE LA RESPUESTA
         // ANEXAR ESE BLOQUE AL OBJETO bloqueComentario
 
+        for (respInfo of comenInfo.respuestas) {
+          bloqueComentario += `
+                <div class='border-start ms-4 mb-3 pb-2 bg-white'>
+                    <strong>${respInfo.autor}</strong><br>
+                    <p class='mb-1 text-muted small'>${respInfo.descripcion}</p>
+                </div>
+                `;
+        }
+
         /* FIN DE RESPUESTAS DE COMENTARIOS */
 
         seccionComentarios.innerHTML += bloqueComentario;
@@ -106,7 +115,7 @@ function mostrarFormularioRespuesta(idComentario, idPublicacion) {
   const formHTML = `
     <div class="form-respuesta mt-2">
         <div class="form-group">
-            <textarea class="form-control mb-2" id="respuesta-${idComentario} rows="2" placeholder="Escribe tu respuesta..."></textarea>
+            <textarea class="form-control mb-2" id="respuesta-${idComentario}" rows="2" placeholder="Escribe tu respuesta..."></textarea>
         </div>
         <div class="text-end">
             <button type="button" class="btn btn-sm btn-primary" onclick="enviarRespuesta(${idComentario}, ${idPublicacion})"><i class="fa-solid fa-reply"></i> Responser</button>
